@@ -11,6 +11,8 @@ spring:
             locator:
               enabled: false
               lower-case-service-id: on
+  main:
+    banner-mode: off
 
 management:
   endpoints:
