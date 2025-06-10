@@ -17,7 +17,11 @@ public class GatewayServerConfiguration {
    .route(p -> p.path("/ms/accounts/**")
     .filters(f ->
      f.rewritePath("/ms/accounts/(?<segment>.*)", "/${segment}")
-      .addResponseHeader("X-Response-Time", (LocalDateTime.now(ZoneOffset.UTC).toString())))
+      .addResponseHeader("X-Response-Time", (LocalDateTime.now(ZoneOffset.UTC).toString()))
+             .circuitBreaker((config -> {
+              config.setName("accountsCircuitBreaker");
+              config.setFallbackUri("forward:/contact-support");
+             })))
     .uri("lb://ACCOUNTS"))
    .route(p -> p.path("/ms/loans/**")
     .filters(f ->
