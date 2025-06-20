@@ -26,14 +26,11 @@ management:
     gateway:
       access: unrestricted
 
-
-
 info:
   app:
     name: "gatewayserver"
     description: "Gateway Server"
     version: "1.0.0"
-
 
 resilience4j:
   circuitbreaker:
