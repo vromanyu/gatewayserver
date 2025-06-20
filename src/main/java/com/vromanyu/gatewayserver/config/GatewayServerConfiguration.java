@@ -4,7 +4,9 @@ import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
@@ -26,7 +28,8 @@ public class GatewayServerConfiguration {
    .route(p -> p.path("/ms/loans/**")
     .filters(f ->
      f.rewritePath("/ms/loans/(?<segment>.*)", "/${segment}")
-      .addResponseHeader("X-Response-Time", (LocalDateTime.now(ZoneOffset.UTC).toString())))
+      .addResponseHeader("X-Response-Time", (LocalDateTime.now(ZoneOffset.UTC).toString()))
+             .retry(config -> config.setRetries(5).setMethods(HttpMethod.GET).setBackoff(Duration.ofMillis(500), Duration.ofMillis(1000), 2, true)))
     .uri("lb://LOANS"))
    .route(p -> p.path("/ms/cards/**")
     .filters(f ->
